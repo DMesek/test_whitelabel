@@ -20,7 +20,7 @@ workflows:
     name: iOS client release
     instance_type: mac_mini_m1
     labels:
-      - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page  
+      - LABEL # Helpful when you open your Codemagic's builds page  
     environment:
       groups:
         - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
@@ -83,7 +83,7 @@ workflows:
     name: Android client release
     instance_type: mac_mini_m1
     labels:
-      - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
+      - LABEL # Helpful when you open your Codemagic's builds page 
     environment:
       groups:
         - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
