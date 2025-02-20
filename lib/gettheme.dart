@@ -2,7 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'themes.dart';
 
 AppTheme getTheme() {
-  final client = dotenv.get('CLIENT', fallback: 'dev');
+  final client = dotenv.get('PRIMARY_COLOR', fallback: 'dev');
   var theme = themeDev;
 
   switch (client) {

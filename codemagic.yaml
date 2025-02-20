@@ -4,6 +4,20 @@ definitions:
     ANDROID_ASSETS_FOLDER: res # The name of your folder in S3 bucket that have the client's Android assets from (/android/app/src/main/res/).
     IOS_ASSETS_FOLDER: AppIcon.appiconset # The name of your folder in S3 bucket that have the client's iOS assets from (/ios/Runner/Assets.xcassets/).
   scripts:
+    - &build_apk
+        name: Build Android APK
+        script: |
+          BUILD_NUMBER=3
+          flutter build apk --release --build-number=$APP_NAME  
+    - &set_up_key_properties
+        name: Set up Android key.properties
+        script: |
+          cat >> "$CM_BUILD_DIR/apps/main_app/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$CM_KEYSTORE_PATH
+          EOF  
     - &get_assets
       name: Get assets from AWS S3 bucket
       script: |
@@ -92,42 +106,28 @@ workflows:
     scripts:
       - *get_assets #Getting client assets from S3 bucket
 
-      - name: Set up keystore
-        script: echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
+      - *set_up_key_properties
 
       - name: Change Android app name
         script: sed -i.bak "s/android:label=.*/android:label=\"$APP_NAME\"/g" android/app/src/main/AndroidManifest.xml
      
       - name: Change Android package name
         script: |
-          echo "android {  defaultConfig { applicationId '${PACKAGE_NAME}' }  }" > android/changePackage.gradle
+          echo "android {  defaultConfig { applicationId '${ANDROID_APP_ID}' }  }" > android/changePackage.gradle
           echo "apply from: rootProject.file('changePackage.gradle')" >> android/app/build.gradle
           
       - name: Change Android icons
         script: cp -r ./$ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
           
       - name: Set client .env file
-        script: echo $DOTENV | base64 --decode > assets/client.env
+        script: echo $ENV | base64 --decode > ./.env
       
-      - name: Set main image # An image that being used in this sample project
-        script: cp -r ./$ASSETS_FOLDER/hero.png assets/hero.png
+      # - name: Set main image # An image that being used in this sample project
+      #   script: cp -r ./$ASSETS_FOLDER/hero.png assets/hero.png
           
       - name: Install dependencies
-        script: flutter packages pub get
+        script: flutter pub get
       
-      - name: Flutter build aab and automatic versioning
-        script: |
-          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-          flutter build appbundle --release \
-          --build-name=1.0.$BUILD_NUMBER \
-          --build-number=$BUILD_NUMBER
+      - *build_apk
     artifacts: 
-      - build/**/outputs/**/*.aab
-      - test-results/flutter.json
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal 
-      email: 
-        recipients:
-          - name@mail.com
+      - build/app/outputs/flutter-apk/*.apk
