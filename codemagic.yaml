@@ -1,8 +1,8 @@
 definitions:     
   env_vars: &env_vars
-    S3_BUCKET_NAME: cmwhitelabel # The name of your S3 bucket that have all of your clients assets.
-    ANDROID_ASSETS_FOLDER: res # The name of your folder in S3 bucket that have the client's Android assets from (/android/app/src/main/res/).
-    IOS_ASSETS_FOLDER: AppIcon.appiconset # The name of your folder in S3 bucket that have the client's iOS assets from (/ios/Runner/Assets.xcassets/).
+    S3_BUCKET_NAME: demo-app-clients22 # The name of your S3 bucket that have all of your clients assets.
+    ANDROID_ASSETS_FOLDER: android_icons # The name of your folder in S3 bucket that have the client's Android assets from (/android/app/src/main/res/).
+    IOS_ASSETS_FOLDER: ios_icons # The name of your folder in S3 bucket that have the client's iOS assets from (/ios/Runner/Assets.xcassets/).
   scripts:
     - &build_apk
         name: Build Android APK
@@ -22,9 +22,11 @@ definitions:
       name: Get assets from AWS S3 bucket
       script: |
         ASSETS_FOLDER=assets_${CLIENT_ID}
+        echo $ASSETS_FOLDER
         echo "ASSETS_FOLDER=$ASSETS_FOLDER" >> $CM_ENV
         
         aws s3 cp s3://$S3_BUCKET_NAME/$ASSETS_FOLDER.zip $ASSETS_FOLDER.zip
+        echo "Unzipping assets"
         unzip $ASSETS_FOLDER.zip -d $ASSETS_FOLDER
 
 
@@ -32,9 +34,7 @@ definitions:
 workflows:
   ios-client-release:
     name: iOS client release
-    instance_type: mac_mini_m1
-    labels:
-      - LABEL # Helpful when you open your Codemagic's builds page  
+    instance_type: mac_mini_m1 # Helpful when you open your Codemagic's builds page  
     environment:
       groups:
         - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
@@ -96,8 +96,6 @@ workflows:
   android-client-release:
     name: Android client release
     instance_type: mac_mini_m1
-    labels:
-      - LABEL # Helpful when you open your Codemagic's builds page 
     environment:
       groups:
         - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
