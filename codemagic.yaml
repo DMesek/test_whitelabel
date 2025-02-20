@@ -99,12 +99,11 @@ workflows:
     environment:
       groups:
         - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
+        - keystore
       vars:
         <<: *env_vars
     scripts:
       - *get_assets #Getting client assets from S3 bucket
-
-      - *set_up_key_properties
 
       - name: Change Android app name
         script: sed -i.bak "s/android:label=.*/android:label=\"$APP_NAME\"/g" android/app/src/main/AndroidManifest.xml
