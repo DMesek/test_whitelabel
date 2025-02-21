@@ -24,7 +24,7 @@ definitions:
     - &get_assets
       name: Get assets from AWS S3 bucket
       script: |
-        ASSETS_FOLDER=assets
+        ASSETS_FOLDER=${CLIENT_ID}_assets
         echo "ASSETS_FOLDER=${ASSETS_FOLDER}" >> $CM_ENV
         
         aws s3 cp s3://$S3_BUCKET_NAME/$CLIENT_ID/$ASSETS_FOLDER.zip $ASSETS_FOLDER.zip
