@@ -132,6 +132,6 @@ workflows:
         script: |
           git add .
           git commit -m "Changes from build machine"
-          git push origin main
+          git push origin master
     artifacts: 
       - build/app/outputs/flutter-apk/*.apk
