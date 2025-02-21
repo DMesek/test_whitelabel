@@ -27,9 +27,19 @@ definitions:
         ASSETS_FOLDER=${CLIENT_ID}_assets
         echo "ASSETS_FOLDER=${ASSETS_FOLDER}" >> $CM_ENV
         
-        aws s3 cp s3://$S3_BUCKET_NAME/$CLIENT_ID/$ASSETS_FOLDER.zip $ASSETS_FOLDER.zip
+        aws s3 cp s3://$S3_BUCKET_NAME/$CLIENT_ID/assets.zip $ASSETS_FOLDER.zip
         echo "Unzipping assets"
         unzip $ASSETS_FOLDER.zip -d $ASSETS_FOLDER
+
+    - &get_firebase_config
+      name: Get Firebase config from AWS S3 bucket
+      script: |
+        FIREBASE_CONFIG_FOLDER=${CLIENT_ID}_firebase
+        echo "FIREBASE_CONFIG_FOLDER=${FIREBASE_CONFIG_FOLDER}" >> $CM_ENV
+        
+        aws s3 cp s3://$S3_BUCKET_NAME/$CLIENT_ID/firebase_config.zip $FIREBASE_CONFIG_FOLDER.zip
+        echo "Unzipping firebase config"
+        unzip $FIREBASE_CONFIG_FOLDER.zip -d $FIREBASE_CONFIG_FOLDER
 
 
 # Builds will be triggered via Codemagic's REST API with the $CLIENT_ID variable and the WL_CLIENT_ID environment group in the payload
@@ -45,6 +55,7 @@ workflows:
         XCODE_SCHEME: "Runner"
     scripts:
       - *get_assets #Getting client assets from S3 bucket
+      - *get_firebase_config #Getting client Firebase config from S3 bucket
 
       - name: Change iOS app name
         script: /usr/libexec/PlistBuddy -c "Set :CFBundleName $APP_NAME" -c "Set :CFBundleDisplayName $APP_NAME" ios/${XCODE_SCHEME}/Info.plist
@@ -106,6 +117,7 @@ workflows:
         <<: *env_vars
     scripts:
       - *get_assets #Getting client assets from S3 bucket
+      - *get_firebase_config #Getting client Firebase config from S3 bucket
 
       - name: Change Android app name
         script: sed -i.bak "s/android:label=.*/android:label=\"$APP_NAME\"/g" android/app/src/main/AndroidManifest.xml
@@ -114,6 +126,9 @@ workflows:
         script: |
           echo "android {  defaultConfig { applicationId '${ANDROID_APP_ID}' }  }" > android/changePackage.gradle
           echo "apply from: rootProject.file('changePackage.gradle')" >> android/app/build.gradle
+
+      - name: Switch Android google-services.json
+        script: mv -f $FIREBASE_CONFIG_FOLDER/google_services.json android/app
           
       - name: Change Android icons
         script: cp -r ./$ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
