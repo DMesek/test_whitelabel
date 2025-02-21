@@ -125,11 +125,18 @@ workflows:
       # - name: Set main image # An image that being used in this sample project
       #   script: cp -r ./$ASSETS_FOLDER/hero.png assets/hero.png
       
-      - name: Push changes to git
+      - name: Check files
         script: |
-          git add .
-          git commit -m "Changes from build machine"
-          git checkout -b change2
-          git push --set-upstream origin change2
+          echo "********* GIT STATUS:"
+          git status
+
+          echo "********** android/app/build.gradle"
+          cat android/app/build.gradle
+
+          echo "********** android/app/src/main/AndroidManifest.xml"
+          cat android/app/src/main/AndroidManifest.xml
+
+          echo "********** .env"
+          cat .env
     artifacts: 
       - build/app/outputs/flutter-apk/*.apk
