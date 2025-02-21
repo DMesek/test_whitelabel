@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'gettheme.dart';
 
 Future main() async {
-  await dotenv.load(fileName: ".env");
+  await dotenv.load();
 
   runApp(Home());
 }
