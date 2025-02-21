@@ -127,8 +127,8 @@ workflows:
           echo "android {  defaultConfig { applicationId '${ANDROID_APP_ID}' }  }" > android/changePackage.gradle
           echo "apply from: rootProject.file('changePackage.gradle')" >> android/app/build.gradle
 
-      - name: Switch Android google-services.json
-        script: mv -f ./$FIREBASE_CONFIG_FOLDER/google_services.json android/app
+      # - name: Switch Android google-services.json
+      #   script: mv -f ./$FIREBASE_CONFIG_FOLDER/google_services.json android/app
           
       - name: Change Android icons
         script: cp -r ./$ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
