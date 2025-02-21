@@ -124,9 +124,6 @@ workflows:
       
       # - name: Set main image # An image that being used in this sample project
       #   script: cp -r ./$ASSETS_FOLDER/hero.png assets/hero.png
-          
-      - name: Install dependencies
-        script: flutter pub get
       
       - name: Push changes to git
         script: |
