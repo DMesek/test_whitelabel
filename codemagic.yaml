@@ -24,11 +24,10 @@ definitions:
     - &get_assets
       name: Get assets from AWS S3 bucket
       script: |
-        ASSETS_FOLDER=assets_${CLIENT_ID}
-        echo $ASSETS_FOLDER
-        echo "ASSETS_FOLDER=$ASSETS_FOLDER" >> $CM_ENV
+        ASSETS_FOLDER=assets
+        echo "ASSETS_FOLDER=${ASSETS_FOLDER}" >> $CM_ENV
         
-        aws s3 cp s3://$S3_BUCKET_NAME/$ASSETS_FOLDER.zip $ASSETS_FOLDER.zip
+        aws s3 cp s3://$S3_BUCKET_NAME/$CLIENT_ID/$ASSETS_FOLDER.zip $ASSETS_FOLDER.zip
         echo "Unzipping assets"
         unzip $ASSETS_FOLDER.zip -d $ASSETS_FOLDER
 
@@ -121,9 +120,6 @@ workflows:
           
       - name: Set client .env file
         script: echo $ENV | base64 --decode > ./.env
-      
-      # - name: Set main image # An image that being used in this sample project
-      #   script: cp -r ./$ASSETS_FOLDER/hero.png assets/hero.png
       
       - name: Check files
         script: |
