@@ -107,7 +107,6 @@ workflows:
         <<: *env_vars
     scripts:
       - *get_assets #Getting client assets from S3 bucket
-      - *set_up_local_properties
 
       - name: Change Android app name
         script: sed -i.bak "s/android:label=.*/android:label=\"$APP_NAME\"/g" android/app/src/main/AndroidManifest.xml
