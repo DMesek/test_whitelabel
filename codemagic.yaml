@@ -146,23 +146,31 @@ workflows:
           
       - name: Set client .env file
         script: echo $ENV | base64 --decode > ./.env
-      
-      - name: Check files
+
+      - name: View GIT
         script: |
-          echo "***CONTENT OF THE BUILD DIR***"
-          ls -l $FIREBASE_CONFIG_FOLDER
-          ls -l android/app
-
           echo "********* GIT STATUS:"
-          git status
+          ls ~/.ssh
+          git remote -v
 
-          echo "********** android/app/build.gradle"
-          cat android/app/build.gradle
 
-          echo "********** android/app/src/main/AndroidManifest.xml"
-          cat android/app/src/main/AndroidManifest.xml
+      
+      # - name: Check files
+      #   script: |
+      #     echo "***CONTENT OF THE BUILD DIR***"
+      #     ls -l $FIREBASE_CONFIG_FOLDER
+      #     ls -l android/app
 
-          echo "********** .env"
-          cat .env
+      #     echo "********* GIT STATUS:"
+      #     git status
+
+      #     echo "********** android/app/build.gradle"
+      #     cat android/app/build.gradle
+
+      #     echo "********** android/app/src/main/AndroidManifest.xml"
+      #     cat android/app/src/main/AndroidManifest.xml
+
+      #     echo "********** .env"
+      #     cat .env
     artifacts: 
       - build/app/outputs/flutter-apk/*.apk
