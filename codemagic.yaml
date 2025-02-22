@@ -147,12 +147,12 @@ workflows:
       - name: Set client .env file
         script: echo $ENV | base64 --decode > ./.env
 
-      - name: View GIT
+      - name: Push to git
         script: |
-          echo "********* GIT STATUS:"
-          ls ~/.ssh
-          git remote -v
-
+          git add .
+          git commit -m "Build $CM_BUILD_NUMBER"
+          git checkout -b branch22
+          git push -u origin branch22
 
       
       # - name: Check files
