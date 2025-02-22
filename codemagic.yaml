@@ -159,8 +159,7 @@ workflows:
           git remote add origin git@github.com:DMesek/test_whitelabel.git
           git add .
           git commit -m "Build $CM_BUILD_NUMBER"
-          git checkout -b branch23
-          git push -u origin branch23
+          git push -u origin change
 
       
       # - name: Check files
