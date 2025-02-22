@@ -45,9 +45,14 @@ definitions:
     - &setup_firebase_config
       name: Setup firebase configuration
       script: |
-        mv -f ./$FIREBASE_CONFIG_FOLDER/google-services.json android/app
+        if [ -z "$ENVIRONMENT" ]; then
+          ENVIRONMENT="production"
+        fi
+        echo "Using environment: $ENVIRONMENT"
+
+        mv -f ./$FIREBASE_CONFIG_FOLDER/google-services.json android/app/$ENVIRONMENT
         mv -f ./$FIREBASE_CONFIG_FOLDER/firebase_options_prod.dart $FIREBASE_OPTIONS_FOLDER
-        mv -f ./$FIREBASE_CONFIG_FOLDER/GoogleService-Info.plist ios/Runner
+        mv -f ./$FIREBASE_CONFIG_FOLDER/GoogleService-Info.plist ios/Runner/$ENVIRONMENT
 
 
 # Builds will be triggered via Codemagic's REST API with the $CLIENT_ID variable and the WL_CLIENT_ID environment group in the payload
@@ -127,7 +132,7 @@ workflows:
       - *get_assets #Getting client assets from S3 bucket
       - *get_firebase_config #Getting client Firebase config from S3 bucket
       - *setup_firebase_config #Setting up firebase configuration
-      
+
       - name: Change Android app name
         script: sed -i.bak "s/android:label=.*/android:label=\"$APP_NAME\"/g" android/app/src/main/AndroidManifest.xml
      
