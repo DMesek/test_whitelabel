@@ -149,6 +149,9 @@ workflows:
 
       - name: Push to git
         script: |
+          echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
+          echo $SSH_PUBLIC_KEY | base64 --decode > ~/.ssh/id_rsa.pub
+          
           git config --global user.email "myname@gmail.com"
           git config --global user.name "My Name"
           git add .
