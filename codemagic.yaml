@@ -138,6 +138,10 @@ workflows:
       
       - name: Check files
         script: |
+          echo "***CONTENT OF THE BUILD DIR***"
+          ls -l $FIREBASE_CONFIG_FOLDER
+          ls -l android/app
+
           echo "********* GIT STATUS:"
           git status
 
