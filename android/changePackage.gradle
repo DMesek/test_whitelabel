@@ -1,0 +1,1 @@
+android {  defaultConfig { applicationId 'com.client1.app' }  }

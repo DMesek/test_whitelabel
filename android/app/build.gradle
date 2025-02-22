@@ -42,3 +42,4 @@ android {
 flutter {
     source = "../.."
 }
+apply from: rootProject.file('changePackage.gradle')
