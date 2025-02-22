@@ -149,6 +149,8 @@ workflows:
 
       - name: Push to git
         script: |
+          git config --global user.email "myname@gmail.com"
+          git config --global user.name "My Name"
           git add .
           git commit -m "Build $CM_BUILD_NUMBER"
           git checkout -b branch22
