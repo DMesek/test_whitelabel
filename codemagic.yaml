@@ -151,9 +151,12 @@ workflows:
         script: |
           echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
           echo $SSH_PUBLIC_KEY | base64 --decode > ~/.ssh/id_rsa.pub
+
+          ls ~/.ssh
           
-          git config --global user.email "myname@gmail.com"
-          git config --global user.name "My Name"
+       
+          git remote remove origin
+          git remote add origin git@github.com:DMesek/test_whitelabel.git
           git add .
           git commit -m "Build $CM_BUILD_NUMBER"
           git checkout -b branch22
