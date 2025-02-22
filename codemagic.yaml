@@ -149,9 +149,9 @@ workflows:
 
       - name: Push to git
         script: |
-          echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
-          echo $SSH_PUBLIC_KEY | base64 --decode > ~/.ssh/id_rsa.pub
-          chmod 400 ~/.ssh/id_rsa
+          # echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
+          # echo $SSH_PUBLIC_KEY | base64 --decode > ~/.ssh/id_rsa.pub
+          # chmod 400 ~/.ssh/id_rsa
           ls ~/.ssh
           
        
@@ -159,8 +159,8 @@ workflows:
           git remote add origin git@github.com:DMesek/test_whitelabel.git
           git add .
           git commit -m "Build $CM_BUILD_NUMBER"
-          git checkout -b branch22
-          git push -u origin branch22
+          git checkout -b branch23
+          git push -u origin branch23
 
       
       # - name: Check files
